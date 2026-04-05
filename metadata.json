@@ -1,0 +1,8 @@
+
+{
+  "name": "Trung tâm Điều hành Nexus",
+  "description": "Bảng điều khiển quản lý chuỗi cung ứng và logistics tương lai với tính năng theo dõi thời gian thực, giám sát tài sản và phân tích hiệu suất bằng AI.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

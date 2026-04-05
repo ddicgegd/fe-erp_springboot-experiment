@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HỆ THỐNG QUẢN TRỊ KHO - SOVEREIGN OPS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Manrope:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#d97dff",
+              "surface-container-highest": "#20262f",
+              "inverse-primary": "#006a70",
+              "inverse-on-surface": "#51555d",
+              "inverse-surface": "#f8f9ff",
+              "on-surface": "#f1f3fc",
+              "outline": "#72757d",
+              "on-tertiary": "#390050",
+              "tertiary-fixed": "#e192ff",
+              "on-tertiary-fixed": "#2c003f",
+              "secondary-fixed-dim": "#2be800",
+              "secondary": "#2ff801",
+              "primary-dim": "#00e2ee",
+              "on-primary-fixed": "#004145",
+              "tertiary-dim": "#bb00fc",
+              "error-dim": "#d7383b",
+              "on-secondary-fixed-variant": "#0d6200",
+              "surface-container-lowest": "#000000",
+              "on-secondary-container": "#e7ffd9",
+              "on-primary-container": "#00555a",
+              "surface-container": "#151a21",
+              "outline-variant": "#44484f",
+              "background": "#0a0e14",
+              "secondary-container": "#106e00",
+              "on-tertiary-fixed-variant": "#600083",
+              "surface-container-high": "#1b2028",
+              "on-error": "#490006",
+              "on-secondary-fixed": "#064200",
+              "tertiary-container": "#be0dff",
+              "error": "#ff716c",
+              "on-error-container": "#ffa8a3",
+              "primary-fixed": "#00f1fe",
+              "secondary-fixed": "#2ff801",
+              "primary-container": "#00f1fe",
+              "surface-bright": "#262c36",
+              "secondary-dim": "#2be800",
+              "surface-variant": "#20262f",
+              "on-surface-variant": "#a8abb3",
+              "surface": "#0a0e14",
+              "on-primary": "#005f64",
+              "on-tertiary-container": "#000000",
+              "on-primary-fixed-variant": "#006065",
+              "surface-container-low": "#0f141a",
+              "error-container": "#9f0519",
+              "on-background": "#f1f3fc",
+              "on-secondary": "#0b5800",
+              "surface-tint": "#99f7ff",
+              "primary-fixed-dim": "#00e2ee",
+              "tertiary": "#d674ff",
+              "primary": "#99f7ff",
+              "surface-dim": "#0a0e14"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        background: rgba(32, 38, 47, 0.4);
+        backdrop-filter: blur(12px);
+      }
+      .hard-clip {
+        clip-path: polygon(0 0, 90% 0, 100% 20%, 100% 100%, 0 100%);
+      }
+      .scanline {
+        background: linear-gradient(to bottom, transparent 50%, rgba(153, 247, 255, 0.05) 50%);
+        background-size: 100% 4px;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-14 bg-[#0a0e14]/80 backdrop-blur-xl shadow-[0_0_15px_rgba(153,247,255,0.1)]">
+<div class="text-xl font-black text-cyan-400 tracking-tighter font-headline">SOVEREIGN_OPS_V1.0</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="font-['Space_Grotesk'] tracking-widest uppercase text-xs text-cyan-900/60 hover:text-cyan-200 hover:bg-cyan-500/10 transition-all px-2 py-1" href="#">SYSTEM_STATUS</a>
+<a class="font-['Space_Grotesk'] tracking-widest uppercase text-xs text-cyan-400 border-b border-cyan-400 px-2 py-1" href="#">NETWORK_STABLE</a>
+<a class="font-['Space_Grotesk'] tracking-widest uppercase text-xs text-cyan-900/60 hover:text-cyan-200 hover:bg-cyan-500/10 transition-all px-2 py-1" href="#">LATENCY_12MS</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="text-cyan-400 hover:text-cyan-200 transition-all">
+<span class="material-symbols-outlined">notifications_active</span>
+</button>
+<button class="text-cyan-400 hover:text-cyan-200 transition-all">
+<span class="material-symbols-outlined">settings_input_component</span>
+</button>
+<button class="text-cyan-400 hover:text-cyan-200 transition-all">
+<span class="material-symbols-outlined">power_settings_new</span>
+</button>
+</div>
+<div class="bg-gradient-to-r from-cyan-500/20 to-transparent h-[1px] w-full absolute bottom-0 left-0"></div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-20 flex flex-col pt-16 pb-20 bg-[#0a0e14] border-r border-cyan-500/10 z-40">
+<div class="flex flex-col items-center space-y-6 flex-1">
+<div class="group relative flex items-center justify-center w-full py-4 text-slate-600 hover:bg-slate-800/50 hover:text-cyan-300 transition-all duration-300">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="absolute left-full ml-2 px-2 py-1 bg-surface-container text-[10px] font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">DASHBOARD</span>
+</div>
+<div class="group relative flex items-center justify-center w-full py-4 bg-cyan-500/20 text-cyan-400 border-l-2 border-cyan-400 transition-all duration-300">
+<span class="material-symbols-outlined">navigation</span>
+<span class="absolute left-full ml-2 px-2 py-1 bg-surface-container text-[10px] font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">LOGISTICS</span>
+</div>
+<div class="group relative flex items-center justify-center w-full py-4 text-slate-600 hover:bg-slate-800/50 hover:text-cyan-300 transition-all duration-300">
+<span class="material-symbols-outlined">fingerprint</span>
+</div>
+<div class="group relative flex items-center justify-center w-full py-4 text-slate-600 hover:bg-slate-800/50 hover:text-cyan-300 transition-all duration-300">
+<span class="material-symbols-outlined">database</span>
+</div>
+</div>
+<div class="flex flex-col items-center space-y-4 mb-4">
+<span class="material-symbols-outlined text-cyan-900">memory</span>
+<span class="material-symbols-outlined text-cyan-900">encrypted</span>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-20 pt-14 pb-8 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto space-y-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end border-l-4 border-primary pl-6">
+<div>
+<h1 class="text-4xl font-headline font-black tracking-tighter text-on-surface">DANH SÁCH SẢN PHẨM</h1>
+<p class="text-primary-dim font-mono text-sm tracking-widest uppercase mt-1">LOGISTICS_CORE // INVENTORY_CONTROL_UNIT</p>
+</div>
+<div class="text-right font-mono text-[10px] text-outline-variant leading-tight">
+                    COORD: 40.7128° N, 74.0060° W<br/>
+                    SEC: OPERATIONAL_AREA_04
+                </div>
+</div>
+<!-- Inventory Status Widgets -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Total Items -->
+<div class="bg-surface-container-high p-5 border-t border-primary/20 relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-1 text-[8px] font-mono text-primary/40">ID-X01</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-outline text-[10px] font-headline tracking-widest uppercase">TỔNG SẢN PHẨM</p>
+<h2 class="text-3xl font-mono font-bold mt-1">1,284</h2>
+</div>
+<div class="text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">package_2</span>
+</div>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-lowest overflow-hidden">
+<div class="h-full bg-primary w-3/4 shadow-[0_0_8px_rgba(153,247,255,0.6)]"></div>
+</div>
+</div>
+<!-- Maintenance Needed -->
+<div class="bg-surface-container-high p-5 border-t border-error/20 relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-1 text-[8px] font-mono text-error/40">SYS-M04</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-outline text-[10px] font-headline tracking-widest uppercase">CẦN BẢO TRÌ</p>
+<h2 class="text-3xl font-mono font-bold mt-1 text-error">12</h2>
+</div>
+<div class="text-error">
+<span class="material-symbols-outlined text-4xl">build_circle</span>
+</div>
+</div>
+<div class="mt-4 flex space-x-1">
+<div class="h-1 flex-1 bg-error"></div>
+<div class="h-1 flex-1 bg-error"></div>
+<div class="h-1 flex-1 bg-error/20"></div>
+<div class="h-1 flex-1 bg-error/20"></div>
+<div class="h-1 flex-1 bg-error/20"></div>
+</div>
+</div>
+<!-- Incoming Shipments -->
+<div class="bg-surface-container-high p-5 border-t border-secondary/20 relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-1 text-[8px] font-mono text-secondary/40">LOG-S99</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-outline text-[10px] font-headline tracking-widest uppercase">LÔ HÀNG SẮP VỀ</p>
+<h2 class="text-3xl font-mono font-bold mt-1 text-secondary">+240</h2>
+</div>
+<div class="text-secondary">
+<span class="material-symbols-outlined text-4xl">local_shipping</span>
+</div>
+</div>
+<div class="mt-4 text-[10px] font-mono text-secondary-dim flex items-center">
+<span class="material-symbols-outlined text-[12px] mr-1">sync</span> ĐANG ĐỒNG BỘ DỮ LIỆU...
+                    </div>
+</div>
+<!-- Unit Value -->
+<div class="bg-surface-container-high p-5 border-t border-tertiary/20 relative group overflow-hidden">
+<div class="absolute top-0 right-0 p-1 text-[8px] font-mono text-tertiary/40">VAL-V02</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-outline text-[10px] font-headline tracking-widest uppercase">GIÁ TRỊ TỔNG</p>
+<h2 class="text-3xl font-mono font-bold mt-1 text-tertiary">$4.2M</h2>
+</div>
+<div class="text-tertiary">
+<span class="material-symbols-outlined text-4xl">payments</span>
+</div>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-lowest">
+<div class="h-full bg-tertiary w-1/2"></div>
+</div>
+</div>
+</section>
+<!-- Search & Filtering HUD -->
+<section class="glass-panel p-4 border-l border-primary/30 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-sm">search</span>
+<input class="w-full bg-surface-container-lowest border-none text-xs font-mono tracking-widest py-3 pl-10 focus:ring-1 focus:ring-primary placeholder:text-outline-variant" placeholder="TRUY VẤN DỮ LIỆU SẢN PHẨM..." type="text"/>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] font-headline font-bold text-primary-dim uppercase tracking-tighter">LOẠI:</span>
+<select class="bg-surface-container border-none text-[10px] font-bold py-2 px-4 focus:ring-1 focus:ring-primary appearance-none cursor-pointer hover:bg-surface-container-high transition-colors">
+<option>TẤT CẢ THIẾT BỊ</option>
+<option>CHIPSET</option>
+<option>MOBILE_UNIT</option>
+<option>NEURAL_MODULE</option>
+</select>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] font-headline font-bold text-primary-dim uppercase tracking-tighter">TRẠNG THÁI:</span>
+<select class="bg-surface-container border-none text-[10px] font-bold py-2 px-4 focus:ring-1 focus:ring-primary appearance-none cursor-pointer hover:bg-surface-container-high transition-colors">
+<option>MỌI TRẠNG THÁI</option>
+<option>SẴN SÀNG</option>
+<option>ĐANG VẬN CHUYỂN</option>
+<option>BẢO TRÌ</option>
+</select>
+</div>
+<button class="bg-primary text-on-primary text-[10px] font-black tracking-widest px-6 py-3 hard-clip hover:brightness-110 active:scale-95 transition-all">
+                    KHỞI TẠO LỌC
+                </button>
+</section>
+<!-- Product Table -->
+<section class="bg-surface-container-low border border-outline-variant/10 relative overflow-hidden">
+<div class="scanline absolute inset-0 pointer-events-none opacity-20"></div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-primary/20 bg-surface-container-high/50">
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Sản phẩm</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Mã SKU</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Phân loại</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Số lượng</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Đơn giá</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase">Trạng thái</th>
+<th class="p-4 text-[10px] font-headline tracking-[0.2em] text-outline uppercase text-center">Tác vụ</th>
+</tr>
+</thead>
+<tbody class="text-sm font-body">
+<!-- Row 1 -->
+<tr class="group hover:bg-primary/5 transition-colors border-b border-outline-variant/10">
+<td class="p-4">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-surface-container-highest flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary text-lg">memory</span>
+</div>
+<span class="font-bold text-on-surface tracking-tight uppercase">Quantum-X Core v2</span>
+</div>
+</td>
+<td class="p-4 font-mono text-primary-dim text-xs">SKU-992-QX</td>
+<td class="p-4">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-primary/30 text-primary">CHIPSET</span>
+</td>
+<td class="p-4 font-mono">412</td>
+<td class="p-4 font-mono">$1,250.00</td>
+<td class="p-4">
+<div class="flex items-center text-secondary text-[10px] font-black">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full mr-2 shadow-[0_0_4px_#2ff801]"></span>
+                                        SẴN SÀNG
+                                    </div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-center space-x-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete_forever</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-primary/5 transition-colors border-b border-outline-variant/10">
+<td class="p-4">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-surface-container-highest flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary text-lg">smart_screen</span>
+</div>
+<span class="font-bold text-on-surface tracking-tight uppercase">Neural-Link Pad 7</span>
+</div>
+</td>
+<td class="p-4 font-mono text-primary-dim text-xs">SKU-001-NLP</td>
+<td class="p-4">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-primary/30 text-primary">MOBILE_UNIT</span>
+</td>
+<td class="p-4 font-mono">85</td>
+<td class="p-4 font-mono">$840.00</td>
+<td class="p-4">
+<div class="flex items-center text-cyan-400 text-[10px] font-black">
+<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-2 shadow-[0_0_4px_#99f7ff]"></span>
+                                        ĐANG VẬN CHUYỂN
+                                    </div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-center space-x-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete_forever</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-primary/5 transition-colors border-b border-outline-variant/10">
+<td class="p-4">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-surface-container-highest flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary text-lg">robot_2</span>
+</div>
+<span class="font-bold text-on-surface tracking-tight uppercase">Sentinel Drone MK-II</span>
+</div>
+</td>
+<td class="p-4 font-mono text-primary-dim text-xs">SKU-544-SD2</td>
+<td class="p-4">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-primary/30 text-primary">NEURAL_MODULE</span>
+</td>
+<td class="p-4 font-mono text-error">04</td>
+<td class="p-4 font-mono">$5,400.00</td>
+<td class="p-4">
+<div class="flex items-center text-error text-[10px] font-black">
+<span class="w-1.5 h-1.5 bg-error rounded-full mr-2 shadow-[0_0_4px_#ff716c]"></span>
+                                        CẦN BẢO TRÌ
+                                    </div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-center space-x-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete_forever</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-primary/5 transition-colors border-b border-outline-variant/10">
+<td class="p-4">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-surface-container-highest flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary text-lg">developer_board</span>
+</div>
+<span class="font-bold text-on-surface tracking-tight uppercase">Bios-Chip Interface</span>
+</div>
+</td>
+<td class="p-4 font-mono text-primary-dim text-xs">SKU-112-BCI</td>
+<td class="p-4">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-primary/30 text-primary">CHIPSET</span>
+</td>
+<td class="p-4 font-mono">1,102</td>
+<td class="p-4 font-mono">$120.00</td>
+<td class="p-4">
+<div class="flex items-center text-secondary text-[10px] font-black">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full mr-2 shadow-[0_0_4px_#2ff801]"></span>
+                                        SẴN SÀNG
+                                    </div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-center space-x-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete_forever</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Technical Footer for Table -->
+<div class="p-3 bg-surface-container-highest/30 flex justify-between items-center text-[9px] font-mono text-outline-variant">
+<div>TRANG 01 / 12 // HIỂN THỊ 50 MỤC</div>
+<div class="flex space-x-4">
+<button class="hover:text-primary transition-colors">TRƯỚC</button>
+<div class="flex space-x-1">
+<span class="text-primary px-1">01</span>
+<span class="px-1">02</span>
+<span class="px-1">03</span>
+<span class="px-1">...</span>
+<span class="px-1">12</span>
+</div>
+<button class="hover:text-primary transition-colors">TIẾP</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="fixed bottom-0 w-full flex items-center justify-between px-4 overflow-hidden bg-slate-950/90 h-8 border-t border-green-500/20 z-50">
+<div class="font-mono text-[9px] uppercase tracking-[0.2em] text-green-500 font-bold">SYSTEM_ACTIVE // STACK_V.99</div>
+<div class="flex items-center space-x-6">
+<div class="animate-pulse-slow font-mono text-[9px] uppercase tracking-[0.2em] text-green-400">TICKER: BTC/USD +2.4%</div>
+<div class="animate-pulse-slow font-mono text-[9px] uppercase tracking-[0.2em] text-green-400">MEM: 88%</div>
+<div class="animate-pulse-slow font-mono text-[9px] uppercase tracking-[0.2em] text-green-400">LINK: SECURE</div>
+</div>
+</footer>
+<!-- Background Grid Pattern -->
+<div class="fixed inset-0 pointer-events-none z-[-1] opacity-[0.03]" style="background-image: radial-gradient(#99f7ff 0.5px, transparent 0.5px); background-size: 24px 24px;"></div>
+</body></html>
