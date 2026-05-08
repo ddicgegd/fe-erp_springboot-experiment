@@ -31,7 +31,7 @@ export const getAttrStatusInfo = (status?: string) =>
 
 // ─── Image URL ─────────────────────────────────────────────────────────────────
 
-export const getImageUrl = (imageName: string) => {
+export const getImageUrl = (imageName: string | undefined | null): string => {
   if (!imageName) return '';
   if (imageName.startsWith('http')) return imageName;
   const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';

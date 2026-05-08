@@ -1,58 +1,107 @@
-import React from 'react';
-import { MOCK_USER } from '../constants';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-interface TopNavProps {
-  onToggleTheme: () => void;
-  onProfileClick?: () => void;
-}
+const THEME_KEY = 'nexus_theme';
 
-const TopNav: React.FC<TopNavProps> = ({ onToggleTheme, onProfileClick }) => {
+const TopNav: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Khởi tạo từ localStorage (đồng bộ với script trong index.html)
+  const [isDark, setIsDark] = useState(() => {
+    const stored = localStorage.getItem(THEME_KEY);
+    return stored !== 'light'; // mặc định = dark
+  });
+
+  // Đồng bộ dark mode class + localStorage
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem(THEME_KEY, 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem(THEME_KEY, 'light');
+    }
+  }, [isDark]);
+
+  const toggleTheme = useCallback(() => setIsDark((p) => !p), []);
+
+  // Display info
+  const displayName = user?.username || user?.email || 'Nexus User';
+  const displayRole = user?.roles?.[0] ?? 'USER';
+  const avatarUrl =
+    user?.avatarUrl ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=A3E635&color=000&bold=true&size=80`;
+
   return (
-    <header className="h-20 flex items-center justify-between px-8 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-200 dark:border-accent-dark">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Hệ thống <span className="text-primary font-mono tracking-widest">NEXUS</span>
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-          HỆ THỐNG TRỰC TUYẾN • ĐỘ TRỄ: 12ms
-        </p>
+    <header className="h-16 flex items-center justify-between px-6 lg:px-8 bg-white/60 dark:bg-background-dark/80 backdrop-blur-xl sticky top-0 z-20 border-b border-gray-200/60 dark:border-accent-dark/60">
+      {/* Left — Brand */}
+      <div className="flex items-center gap-4">
+        <div>
+          <h1 className="text-lg lg:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-none">
+            Hệ thống <span className="text-primary font-mono tracking-[0.15em]">NEXUS</span>
+          </h1>
+          <p className="text-gray-400 dark:text-gray-500 text-[10px] mt-0.5 flex items-center gap-1.5 font-mono uppercase tracking-widest">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
+            Trực tuyến • Độ trễ: 12ms
+          </p>
+        </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="hidden lg:flex relative">
-          <input 
-            className="pl-10 pr-4 py-2 bg-white dark:bg-surface-dark border-none ring-1 ring-gray-200 dark:ring-accent-dark rounded-xl text-sm focus:ring-2 focus:ring-primary w-64 transition-all" 
-            placeholder="Tìm vận đơn, ID..." 
-            type="text" 
+      {/* Right — Actions */}
+      <div className="flex items-center gap-3 lg:gap-5">
+        {/* Search */}
+        <div className="hidden lg:flex relative group">
+          <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-[18px] group-focus-within:text-primary transition-colors">
+            search
+          </span>
+          <input
+            className="pl-10 pr-4 py-2 bg-gray-100/80 dark:bg-accent-dark/60 border border-transparent ring-0 rounded-xl text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary/30 w-56 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 text-gray-800 dark:text-gray-200 outline-none"
+            placeholder="Tìm vận đơn, ID..."
+            type="text"
           />
-          <span className="material-icons-round absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
         </div>
 
-        <button 
-          onClick={onToggleTheme}
-          className="p-2.5 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-accent-dark text-gray-500 hover:text-primary transition-all"
-          title="Chế độ tối/sáng"
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-accent-dark border border-gray-200/60 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-all cursor-pointer hover:shadow-glow/20"
+          title={isDark ? 'Chế độ sáng' : 'Chế độ tối'}
         >
-          <span className="material-icons-round text-lg dark:hidden">dark_mode</span>
-          <span className="material-icons-round text-lg hidden dark:block">light_mode</span>
+          <span className="material-icons-round text-[18px] dark:hidden">dark_mode</span>
+          <span className="material-icons-round text-[18px] hidden dark:block">light_mode</span>
         </button>
 
-        <div 
-          onClick={onProfileClick}
-          className="flex items-center gap-3 pl-6 border-l border-gray-200 dark:border-accent-dark cursor-pointer hover:opacity-80 transition-opacity"
+        {/* Notification Bell */}
+        <button className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-accent-dark border border-gray-200/60 dark:border-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary transition-all cursor-pointer relative">
+          <span className="material-icons-round text-[18px]">notifications_none</span>
+          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-background-dark" />
+        </button>
+
+        {/* Divider */}
+        <div className="w-px h-8 bg-gray-200 dark:bg-accent-dark hidden sm:block" />
+
+        {/* User Profile */}
+        <div
+          onClick={() => navigate('/settings')}
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group"
         >
           <div className="hidden sm:block text-right">
-            <p className="text-sm font-bold text-gray-900 dark:text-white">{MOCK_USER.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{MOCK_USER.role}</p>
+            <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight group-hover:text-primary transition-colors">
+              {displayName}
+            </p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono uppercase tracking-wider">
+              {displayRole}
+            </p>
           </div>
           <div className="relative">
-            <img 
-              alt="Ảnh đại diện" 
-              className="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5" 
-              src={MOCK_USER.avatar} 
+            <img
+              alt="Ảnh đại diện"
+              className="w-9 h-9 rounded-xl border-2 border-primary/20 object-cover"
+              src={avatarUrl}
             />
-            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-surface-dark rounded-full"></div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-background-dark rounded-full shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
           </div>
         </div>
       </div>

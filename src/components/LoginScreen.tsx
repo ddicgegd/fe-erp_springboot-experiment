@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLogin, useRegister } from '../api/generated/auth-controller-impl/auth-controller-impl';
-import { AuthResponse } from '../api/generated/eRPExperimentAPI.schemas';
+import { useAuth } from '../contexts/AuthContext';
+import type { AuthResponse } from '../api/generated/eRPExperimentAPI.schemas';
 
-interface LoginScreenProps {
-  onLogin: () => void;
-}
+const LoginScreen: React.FC = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+  // Nếu đã đăng nhập, redirect về trang trước hoặc dashboard
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      const from = (location.state as { from?: Location })?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    }
+  }, [auth.isAuthenticated, navigate, location.state]);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -93,10 +102,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const loginMutation = useLogin({
     mutation: {
       onSuccess: (response) => {
-        const res = response as any;
-        const statusCode = res?.status?.code;
+        const res = response as Record<string, unknown>;
+        const statusCode = (res?.status as Record<string, unknown>)?.code as number | undefined;
         const authData = res?.data as AuthResponse;
-        const message = res?.data?.message || res?.status?.message;
+        const message = (res?.data as Record<string, unknown>)?.message as string
+          || ((res?.status as Record<string, unknown>)?.message as string);
 
         // Backend returns HTTP 200 but inner status code may differ
         if (statusCode && statusCode !== 200) {
@@ -105,15 +115,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         }
 
         if (authData?.accessToken) {
-          localStorage.setItem('access_token', authData.accessToken);
-          localStorage.setItem('nexus_user_info', JSON.stringify(authData));
-          onLogin();
+          // Lưu vào AuthContext (tự động sync localStorage)
+          auth.login(authData.accessToken, authData);
+          // Navigate sẽ được trigger bởi useEffect ở trên khi isAuthenticated thay đổi
         } else {
           setError(message || 'Không nhận được mã xác thực từ máy chủ.');
         }
       },
-      onError: (err: any) => {
-        const res = err.response?.data;
+      onError: (err: unknown) => {
+        const axiosErr = err as { response?: { data?: { data?: { message?: string }; status?: { message?: string } } } };
+        const res = axiosErr.response?.data;
         const message = res?.data?.message || res?.status?.message;
         setError(message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
       }
@@ -136,8 +147,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         // Start countdown (7 seconds)
         startCountdown(7);
       },
-      onError: (err: any) => {
-        setRegError(err.response?.data?.status?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+      onError: (err: unknown) => {
+        const axiosErr = err as { response?: { data?: { status?: { message?: string } } } };
+        setRegError(axiosErr.response?.data?.status?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
         setRegSuccess(null);
       }
     }

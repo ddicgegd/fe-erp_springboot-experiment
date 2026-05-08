@@ -3,6 +3,16 @@ import type { ProductDto } from '../types';
 import { getStatusDetailInfo, getImageUrl } from '../helpers';
 import { useProductViewTracking } from '../hooks/useProductViewTracking';
 
+// Extended product type cho admin fields (Backend @JsonView trả thêm cho ADMIN)
+interface ProductWithAnalytics extends ProductDto {
+  viewCount?: number;
+  totalSoldQuantity?: number;
+  totalRevenue?: number;
+  totalOrders?: number;
+  averageRating?: number;
+  reviewCount?: number;
+}
+
 interface ProductDetailPanelProps {
   product: ProductDto;
   onClose: () => void;
@@ -12,19 +22,23 @@ interface ProductDetailPanelProps {
 const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClose, onEdit }) => {
   const statusInfo = getStatusDetailInfo(product.status);
   const [showHistory, setShowHistory] = useState(false);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+
+  // Cast an toàn — Backend có thể trả thêm fields tùy role
+  const analytics = product as ProductWithAnalytics;
 
   // Tracking: tăng lượt xem khi panel mở (1 lần/session/product)
   useProductViewTracking(product.id);
 
   return (
     <div
-      className="w-80 min-w-[350px] bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-3xl border border-gray-200 dark:border-white/5 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300 ease-out overflow-hidden"
+      className="w-[350px] flex-shrink-0 sticky top-6 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-3xl border border-gray-200 dark:border-white/5 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300 ease-out overflow-hidden relative"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-7 right-6 w-6 h-6 flex items-center justify-center text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/5 dark:hover:bg-white/20 transition-all z-20"
+        className="absolute top-7 right-6 w-6 h-6 flex items-center justify-center text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/5 dark:hover:bg-white/20 transition-all z-20 border-none cursor-pointer"
         title="Đóng"
       >
         <span className="material-icons-round text-[16px]">close</span>
@@ -35,9 +49,9 @@ const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClos
         <div className="pr-8">
           <div
             className="text-neutral-900 dark:text-white text-[19px] font-bold leading-tight"
-            title={product.name}
+            title={product.name ?? ''}
           >
-            {product.name}
+            {product.name ?? 'Không có tên'}
           </div>
         </div>
 
@@ -62,7 +76,7 @@ const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClos
             <div className="flex flex-col gap-2">
               <span className="text-stone-500 text-[10px] font-bold">Mã SP</span>
               <span className="text-black dark:text-white text-xs font-bold">
-                {product.id?.substring(0, 10) || 'N/A'}
+                {product.id ? String(product.id).substring(0, 10) : 'N/A'}
               </span>
             </div>
           </div>
@@ -72,26 +86,30 @@ const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClos
             <span className="text-stone-500 text-[10px] font-bold">Hình ảnh</span>
             {product.mediaItems && product.mediaItems.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
-                {product.mediaItems.map((img, i) => (
-                  <img
-                    key={i}
-                    src={getImageUrl(img.url)}
-                    alt={`${product.name} ${i + 1}`}
-                    className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-white/10"
-                  />
-                ))}
+                {product.mediaItems.map((img, i) => {
+                  const url = getImageUrl(img.url);
+                  return (
+                    <img
+                      key={img.key || i}
+                      src={url}
+                      alt={`${product.name ?? ''} ${i + 1}`}
+                      className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-white/10 cursor-pointer hover:scale-105 hover:shadow-lg transition-all"
+                      onClick={() => url && setLightboxImg(url)}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <span className="text-stone-400 text-xs italic">Chưa có ảnh</span>
             )}
           </div>
 
-          {/* Detail rows */}
+          {/* Analytics rows */}
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-2">
               <span className="text-stone-500 text-[10px] font-bold">Lượt xem</span>
               <span className="text-gray-900 dark:text-white text-xs font-bold">
-                {((product as any).viewCount || 0).toLocaleString('vi-VN')}
+                {(analytics.viewCount ?? 0).toLocaleString('vi-VN')}
               </span>
             </div>
             <div className="flex flex-col gap-2">
@@ -106,13 +124,13 @@ const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClos
             <div className="flex flex-col gap-2">
               <span className="text-stone-500 text-[10px] font-bold">Đã bán</span>
               <span className="text-gray-900 dark:text-white text-xs font-bold">
-                {((product as any).totalSoldQuantity || 0).toLocaleString('vi-VN')}
+                {(analytics.totalSoldQuantity ?? 0).toLocaleString('vi-VN')}
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-stone-500 text-[10px] font-bold">Doanh thu</span>
               <span className="text-green-600 dark:text-green-400 text-xs font-black">
-                {((product as any).totalRevenue || 0).toLocaleString('vi-VN')} ₫
+                {(analytics.totalRevenue ?? 0).toLocaleString('vi-VN')} ₫
               </span>
             </div>
           </div>
@@ -143,12 +161,34 @@ const ProductDetailPanel: React.FC<ProductDetailPanelProps> = ({ product, onClos
       <div className="py-2 px-3 pt-2 pb-8">
         <button
           onClick={onEdit}
-          className="w-full h-12 flex justify-center items-center px-6 bg-primary font-bold hover:scale-[1.02] active:scale-95 shadow-glow rounded-2xl text-black transition-all"
+          className="w-full h-12 flex justify-center items-center px-6 bg-primary font-bold hover:scale-[1.02] active:scale-95 shadow-glow rounded-2xl text-black transition-all border-none cursor-pointer"
         >
           <span className="material-icons-round text-[18px] mr-2">edit</span>
           CHỈNH SỬA
         </button>
       </div>
+
+      {/* Lightbox — render INSIDE the component div, not as sibling */}
+      {lightboxImg && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-200 cursor-pointer"
+          onClick={() => setLightboxImg(null)}
+        >
+          <div className="relative max-w-[90vw] max-h-[90vh]">
+            <img
+              src={lightboxImg}
+              alt="Preview"
+              className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl"
+            />
+            <button
+              onClick={() => setLightboxImg(null)}
+              className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white/90 dark:bg-surface-dark/90 flex items-center justify-center text-gray-800 dark:text-white shadow-lg border-none cursor-pointer hover:scale-110 transition-transform"
+            >
+              <span className="material-icons-round">close</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

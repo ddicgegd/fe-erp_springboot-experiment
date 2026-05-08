@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { useQuery } from '@tanstack/react-query';
 import type { GetProductRequest, AttributesSearchRequest } from './types';
 import { fetchProducts, fetchAttributes, fetchCategories } from './api';
@@ -360,16 +361,20 @@ const ProductListScreen: React.FC = () => {
 
         {/* Right Panel */}
         {selectedProduct && (
-          <ProductDetailPanel product={selectedProduct} onClose={() => setSelectedProduct(null)} onEdit={() => setEditProduct(selectedProduct)} />
+          <ErrorBoundary key={`product-${selectedProduct.id}`}>
+            <ProductDetailPanel product={selectedProduct} onClose={() => setSelectedProduct(null)} onEdit={() => setEditProduct(selectedProduct)} />
+          </ErrorBoundary>
         )}
         {selectedAttribute && (
-          <AttributeDetailPanel attr={selectedAttribute} onClose={() => setSelectedAttribute(null)}
-            onSave={async (updated) => {
-              setSelectedAttribute(updated);
-              const fresh = await fetchAttributes(attrBody);
-              const freshAttr = fresh?.data?.contents?.find(a => a.id === updated.id);
-              if (freshAttr) setSelectedAttribute(freshAttr);
-            }} />
+          <ErrorBoundary key={`attr-${selectedAttribute.id}`}>
+            <AttributeDetailPanel attr={selectedAttribute} onClose={() => setSelectedAttribute(null)}
+              onSave={async (updated) => {
+                setSelectedAttribute(updated);
+                const fresh = await fetchAttributes(attrBody);
+                const freshAttr = fresh?.data?.contents?.find(a => a.id === updated.id);
+                if (freshAttr) setSelectedAttribute(freshAttr);
+              }} />
+          </ErrorBoundary>
         )}
 
         {editProduct && (

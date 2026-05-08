@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
   <meta charset="utf-8" />
@@ -37,6 +37,18 @@
         },
       },
     };
+  </script>
+  <script>
+    // Áp dụng dark mode TRƯỚC first paint để tránh flash trắng
+    (function() {
+      var theme = localStorage.getItem('nexus_theme');
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        if (!theme) localStorage.setItem('nexus_theme', 'dark');
+      }
+    })();
   </script>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />

@@ -11,8 +11,8 @@ interface ProductRowProps {
 
 const ProductRow: React.FC<ProductRowProps> = ({ product, isSelected, onSelect }) => {
   const statusInfo = getStatusDetailInfo(product.status);
-  const iconIdx = hashName(product.name, ICON_LIST.length);
-  const colorIdx = hashName(product.name, ICON_COLOR.length);
+  const iconIdx = hashName(product.name ?? '', ICON_LIST.length);
+  const colorIdx = hashName(product.name ?? '', ICON_COLOR.length);
   // Silence unused-var warnings — kept for future icon display
   void iconIdx;
   void colorIdx;

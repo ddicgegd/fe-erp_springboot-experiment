@@ -14,11 +14,7 @@ const data = [
   { name: '20:00', val: 60 },
 ];
 
-interface DashboardScreenProps {
-  onTrackShipment: () => void;
-}
-
-const DashboardScreen: React.FC<DashboardScreenProps> = ({ onTrackShipment }) => {
+const DashboardScreen: React.FC = () => {
   const { data: pendingOrdersResponse, isLoading: isLoadingPending } = useGetPendingOrders();
   const { data: inProgressOrdersResponse, isLoading: isLoadingInProgress } = useGetInProgressOrders();
 
