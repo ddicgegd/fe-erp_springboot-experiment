@@ -1,0 +1,114 @@
+// Edit profile
+text-zinc-800
+text-[8.48px]
+font-bold
+font-['Poppins']
+leading-[9.54px]
+---
+// It will take a couple of minutes. <br/>Change profile settings and confirm with SMS code
+text-gray-600
+text-[4.24px]
+font-light
+font-['Roboto']
+leading-[5.83px]
+---
+// Personal
+text-slate-500
+text-[4.77px]
+font-medium
+font-['Poppins']
+leading-[6.36px]
+---
+// Company
+text-zinc-800
+text-[4.77px]
+font-medium
+font-['Poppins']
+leading-[6.36px]
+---
+// Your company data
+text-zinc-800
+text-[4.77px]
+font-semibold
+font-['Poppins']
+leading-[6.36px]
+---
+// Company name
+text-zinc-800
+text-[3.45px]
+font-normal
+font-['Poppins']
+leading-[4.77px]
+---
+// Smith & Partners
+text-zinc-800
+text-[4.77px]
+font-normal
+font-['Roboto']
+leading-[7.42px]
+---
+// Company address
+text-zinc-800
+text-[3.45px]
+font-normal
+font-['Poppins']
+leading-[4.77px]
+---
+// 47 W 13th St, New York, USA
+text-zinc-800
+text-[4.77px]
+font-normal
+font-['Roboto']
+leading-[7.42px]
+---
+// Registration type
+text-zinc-800
+text-[3.45px]
+font-normal
+font-['Poppins']
+leading-[4.77px]
+---
+// Limited liability company
+text-zinc-800
+text-[4.77px]
+font-normal
+font-['Roboto']
+leading-[7.42px]
+---
+// Certificate
+text-zinc-800
+text-[4.77px]
+font-semibold
+font-['Poppins']
+leading-[6.36px]
+---
+// Required
+text-gray-600
+text-[3.18px]
+font-light
+font-['Poppins']
+leading-[4.24px]
+---
+// Upload
+text-white
+text-[4.24px]
+font-medium
+font-['Roboto']
+capitalize
+leading-[6.36px]
+---
+// Cancel
+text-zinc-800
+text-[4.24px]
+font-medium
+font-['Poppins']
+capitalize
+leading-[6.36px]
+---
+// Save changes
+text-white
+text-[4.24px]
+font-medium
+font-['Roboto']
+capitalize
+leading-[6.36px]
