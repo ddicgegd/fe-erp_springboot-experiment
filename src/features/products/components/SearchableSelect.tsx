@@ -65,12 +65,12 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center space-x-2 bg-gray-100/50 dark:bg-accent-dark/50 rounded-2xl p-1 pr-4 border border-transparent hover:border-gray-200 dark:hover:border-white/10 transition h-[50px] cursor-pointer"
+        className={`flex items-center space-x-2 bg-gray-100/50 dark:bg-[#0A0B10] rounded-xl p-1 pr-4 border border-transparent hover:border-gray-200 dark:hover:border-white/10 dark:border-white/5 transition h-11 cursor-pointer select-container`}
       >
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-3 whitespace-nowrap">
+        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest pl-3 whitespace-nowrap">
           {label}
         </span>
-        <span className="text-gray-800 dark:text-gray-200 text-sm font-semibold py-3 px-2 truncate max-w-[160px]">
+        <span className="text-gray-800 dark:text-gray-200 text-sm font-semibold py-1.5 px-2 truncate max-w-[160px] select-value">
           {selectedLabel}
         </span>
         <span
@@ -83,7 +83,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
       {/* Dropdown panel */}
       {open && (
         <div
-          className="absolute top-full left-0 mt-2 w-[280px] bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 z-50 overflow-hidden"
+          className="absolute top-full left-0 mt-2 w-[280px] bg-white dark:bg-[#0A0B10] rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 z-50 overflow-hidden"
           style={{ animation: 'fadeIn 0.15s ease-out' }}
         >
           {/* Search input */}

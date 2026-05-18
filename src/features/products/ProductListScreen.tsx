@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Package, Wrench, Truck, Wallet, Plus, Search } from 'lucide-react';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { useQuery } from '@tanstack/react-query';
 import type { GetProductRequest, AttributesSearchRequest } from './types';
@@ -83,7 +84,7 @@ const ProductListScreen: React.FC = () => {
     ...(attrProductFilter !== 'ALL' ? { productIds: [attrProductFilter] } : {}),
   };
 
-  const { data: attrData, isLoading: attrLoading, isFetching: attrFetching } = useQuery({
+  const { data: attrData, isLoading: attrLoading, isFetching: attrFetching, refetch: refetchAttr } = useQuery({
     queryKey: ['searchAttributes', attrKeyword, attrStatusFilter, attrProductFilter, attrPage],
     queryFn: () => fetchAttributes(attrBody),
     placeholderData: (prev: any) => prev,
@@ -132,94 +133,115 @@ const ProductListScreen: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Page Header */}
-      <div className="flex justify-between items-end border-l-4 border-primary pl-6">
+      <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter text-gray-800 dark:text-white">DANH SÁCH SẢN PHẨM</h1>
-          <p className="text-primary font-mono text-sm tracking-widest uppercase mt-2">LOGISTICS_CORE // INVENTORY_CONTROL</p>
-        </div>
-        <div className="hidden md:block text-right font-mono text-xs text-gray-500 leading-tight">
-          COORD: 40.7128° N, 74.0060° W<br />SEC: OPERATIONAL_AREA_04
+          <h1 className="text-3xl font-black tracking-tight text-white flex items-center border-l-4 border-primary pl-4 uppercase">
+            Danh sách sản phẩm
+          </h1>
+          <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-2 ml-5">
+            Logistics_Core // Inventory_Control
+          </p>
         </div>
       </div>
 
       {/* Stats Widgets */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl p-6 relative group overflow-hidden border border-gray-200 dark:border-white/5">
-          <div className="absolute top-6 right-6 text-primary"><span className="material-icons-round text-3xl transition-transform group-hover:scale-110">inventory_2</span></div>
-          <p className="text-gray-500 text-xs font-bold tracking-widest uppercase">TỔNG SẢN PHẨM</p>
-          <h2 className="text-4xl font-black mt-2 text-gray-800 dark:text-white">{isLoading ? '...' : totalElements.toLocaleString('vi-VN')}</h2>
-          <div className="mt-6 h-2 w-full bg-gray-100 dark:bg-black/30 rounded-full overflow-hidden"><div className="h-full bg-primary w-3/4 shadow-glow rounded-full" /></div>
-        </div>
-        <div className="bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl p-6 relative group overflow-hidden border border-gray-200 dark:border-white/5">
-          <div className="absolute top-6 right-6 text-red-500"><span className="material-icons-round text-3xl transition-transform group-hover:scale-110">build_circle</span></div>
-          <p className="text-gray-500 text-xs font-bold tracking-widest uppercase">CẦN BẢO TRÌ</p>
-          <h2 className="text-4xl font-black mt-2 text-red-500">{isLoading ? '...' : products.filter((p) => p.status === 'LOCKED').length}</h2>
-          <div className="mt-6 flex space-x-1.5 h-2">
-            <div className="flex-1 bg-red-500 rounded-full" /><div className="flex-1 bg-red-500 rounded-full" />
-            <div className="flex-1 bg-red-500/20 rounded-full" /><div className="flex-1 bg-red-500/20 rounded-full" /><div className="flex-1 bg-red-500/20 rounded-full" />
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Card 1 */}
+        <div className="bg-[#12131A] border border-white/5 rounded-2xl p-4 flex items-center gap-4 min-w-[160px]">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <Package size={20} className="text-primary" />
+          </div>
+          <div>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Tổng sản phẩm</p>
+            <p className="text-xl font-black text-white leading-tight">{isLoading ? '...' : totalElements.toLocaleString('vi-VN')}</p>
           </div>
         </div>
-        <div className="bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl p-6 relative group overflow-hidden border border-gray-200 dark:border-white/5">
-          <div className="absolute top-6 right-6 text-cyan-500"><span className="material-icons-round text-3xl transition-transform group-hover:scale-110">local_shipping</span></div>
-          <p className="text-gray-500 text-xs font-bold tracking-widest uppercase">LÔ HÀNG SẮP VỀ</p>
-          <h2 className="text-4xl font-black mt-2 text-cyan-500">+240</h2>
-          <div className="mt-6 mb-[-4px] text-xs font-bold text-cyan-500 flex items-center bg-cyan-500/10 dark:bg-cyan-500/20 w-fit px-3 py-1 rounded-full">
-            <span className={`material-icons-round text-[14px] mr-1 ${isFetching ? 'animate-spin' : ''}`}>sync</span>
-            {isFetching ? 'ĐANG ĐỒNG BỘ...' : 'ĐÃ ĐỒNG BỘ'}
+        {/* Card 2 */}
+        <div className="bg-[#12131A] border border-white/5 rounded-2xl p-4 flex items-center gap-4 min-w-[160px]">
+          <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+            <Wrench size={20} className="text-red-500" />
+          </div>
+          <div>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Cần bảo trì</p>
+            <p className="text-xl font-black text-red-500 leading-tight">{isLoading ? '...' : products.filter((p) => p.status === 'LOCKED').length}</p>
           </div>
         </div>
-        <div className="bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl p-6 relative group overflow-hidden border border-gray-200 dark:border-white/5">
-          <div className="absolute top-6 right-6 text-secondary"><span className="material-icons-round text-3xl transition-transform group-hover:scale-110">payments</span></div>
-          <p className="text-gray-500 text-xs font-bold tracking-widest uppercase">GIÁ TRỊ TỔNG</p>
-          <h2 className="text-4xl font-black mt-2 text-secondary">$4.2M</h2>
-          <div className="mt-6 h-2 w-full bg-gray-100 dark:bg-black/30 rounded-full overflow-hidden"><div className="h-full bg-secondary w-1/2 rounded-full shadow-glow-purple" /></div>
+        {/* Card 3 */}
+        <div className="bg-[#12131A] border border-white/5 rounded-2xl p-4 flex items-center gap-4 min-w-[160px]">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
+            <Truck size={20} className="text-blue-500" />
+          </div>
+          <div>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Sắp về</p>
+            <p className="text-xl font-black text-blue-500 leading-tight">+240</p>
+          </div>
+        </div>
+        {/* Card 4 */}
+        <div className="bg-[#12131A] border border-white/5 rounded-2xl p-4 flex items-center gap-4 min-w-[160px]">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
+            <Wallet size={20} className="text-purple-500" />
+          </div>
+          <div>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Giá trị</p>
+            <p className="text-xl font-black text-purple-400 leading-tight">$4.2M</p>
+          </div>
         </div>
       </section>
 
       {/* Main Split Layout */}
       <div className="flex gap-8 items-start relative pb-10">
         {/* Left Panel */}
-        <div className={`bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl border border-gray-200 dark:border-white/5 overflow-hidden flex flex-col transition-all duration-300 ease-out ${(selectedProduct || selectedAttribute) ? 'w-[calc(100%-350px-2rem)]' : 'w-full'}`}>
+        <div className="bg-[#12131A] rounded-3xl border border-white/5 overflow-hidden flex flex-col w-full">
 
           {/* Search & Filter */}
-          <section className="p-6 border-b border-gray-200 dark:border-white/5 flex flex-wrap items-center gap-4">
-            <div className="flex-1 min-w-[200px] relative">
-              <span className="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+          <section className="px-4 md:px-6 py-4 border-b border-white/5 flex flex-wrap items-center gap-3">
+            {/* Search */}
+            <div className="flex-1 min-w-[200px] max-w-sm relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
               <input
-                className="w-full bg-gray-100/50 dark:bg-accent-dark/50 border-none rounded-2xl text-sm py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary placeholder:text-gray-400 dark:text-gray-300 outline-none transition-all"
-                placeholder={activeTab === 'products' ? 'Tìm kiếm sản phẩm, mã SKU...' : 'Tìm kiếm biến thể, thuộc tính...'}
+                className="w-full bg-[#0A0B10] border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
+                placeholder={activeTab === 'products' ? 'Tìm sản phẩm, mã SKU...' : 'Tìm biến thể, thuộc tính...'}
                 value={activeTab === 'products' ? inputValue : attrInputValue}
                 onChange={(e) => activeTab === 'products' ? setInputValue(e.target.value) : setAttrInputValue(e.target.value)}
               />
             </div>
 
-            {activeTab === 'products' ? (
-              <SearchableSelect label="DANH MỤC:" placeholder="Tìm danh mục..." value={categoryFilter} onChange={setCategoryFilter}
-                options={[{ value: 'ALL', label: 'Tất cả danh mục' }, ...categories.map((cat) => ({ value: cat.id!, label: cat.name || 'N/A' }))]} />
-            ) : (
-              <SearchableSelect label="SẢN PHẨM:" placeholder="Tìm sản phẩm..." value={attrProductFilter} onChange={setAttrProductFilter}
-                options={[{ value: 'ALL', label: 'Tất cả sản phẩm' }, ...products.map((p) => ({ value: p.id!, label: p.name || 'N/A' }))]} />
-            )}
+            {/* Divider */}
+            <div className="w-px h-7 bg-white/5 hidden md:block" />
 
-            {activeTab === 'products' ? (
-              <SearchableSelect label="TRẠNG THÁI:" placeholder="Tìm trạng thái..." value={statusFilter} onChange={setStatusFilter} showSearch={false}
-                options={[{ value: 'ALL', label: 'Mọi trạng thái' }, { value: 'ACTIVE', label: 'Sẵn sàng' }, { value: 'LOCKED', label: 'Cần bảo trì' }]} />
-            ) : (
-              <SearchableSelect label="TRẠNG THÁI:" placeholder="Tìm trạng thái..." value={attrStatusFilter} onChange={setAttrStatusFilter} showSearch={false}
-                options={[{ value: 'ALL', label: 'Mọi trạng thái' }, { value: 'ACTIVE', label: 'Sẵn sàng' }, { value: 'LOCKED', label: 'Cần bảo trì' }]} />
-            )}
+            {/* Filters */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {activeTab === 'products' ? (
+                <SearchableSelect label="DANH MỤC:" placeholder="Tất cả danh mục" value={categoryFilter} onChange={setCategoryFilter}
+                  options={[{ value: 'ALL', label: 'Tất cả danh mục' }, ...categories.map((cat) => ({ value: cat.id!, label: cat.name || 'N/A' }))]} />
+              ) : (
+                <SearchableSelect label="SẢN PHẨM:" placeholder="Tất cả sản phẩm" value={attrProductFilter} onChange={setAttrProductFilter}
+                  options={[{ value: 'ALL', label: 'Tất cả sản phẩm' }, ...products.map((p) => ({ value: p.id!, label: p.name || 'N/A' }))]} />
+              )}
 
-            <div className="relative" ref={addMenuRef}>
+              {activeTab === 'products' ? (
+                <SearchableSelect label="TRẠNG THÁI:" placeholder="Mọi trạng thái" value={statusFilter} onChange={setStatusFilter} showSearch={false}
+                  options={[{ value: 'ALL', label: 'Mọi trạng thái' }, { value: 'ACTIVE', label: 'Sẵn sàng' }, { value: 'LOCKED', label: 'Cần bảo trì' }]} />
+              ) : (
+                <SearchableSelect label="TRẠNG THÁI:" placeholder="Mọi trạng thái" value={attrStatusFilter} onChange={setAttrStatusFilter} showSearch={false}
+                  options={[{ value: 'ALL', label: 'Mọi trạng thái' }, { value: 'AVAILABLE', label: 'Có sẵn' }, { value: 'UNAVAILABLE', label: 'Hết hàng' }, { value: 'COMING_SOON', label: 'Sắp ra mắt' }, { value: 'NOT_ACTIVE', label: 'Không hoạt động' }]} />
+              )}
+            </div>
+
+            {/* Spacer */}
+            <div className="flex-1 hidden md:block" />
+
+            {/* Add button */}
+            <div className="relative w-full md:w-auto" ref={addMenuRef}>
               <button
-                className="bg-primary text-black font-bold h-12 px-8 rounded-2xl hover:scale-[1.02] shadow-glow active:scale-95 transition-all flex items-center cursor-pointer border-none"
+                className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-black px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#86efac] transition-colors shrink-0 cursor-pointer border-none"
                 onClick={() => setAddMenuOpen(!addMenuOpen)}
               >
-                <span className="material-icons-round mr-2 text-lg">add</span>
+                <Plus size={18} strokeWidth={3} />
                 THÊM MỚI
-                <span className={`material-icons-round ml-1 text-[18px] transition-transform ${addMenuOpen ? 'rotate-180' : ''}`}>expand_more</span>
               </button>
               {addMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-[240px] bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 z-50 overflow-hidden py-2" style={{ animation: 'fadeIn 0.15s ease-out' }}>
+                <div className="absolute right-0 top-full mt-2 w-[240px] bg-white dark:bg-[#0A0B10] rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 z-50 overflow-hidden py-2" style={{ animation: 'fadeIn 0.15s ease-out' }}>
                   {[
                     { key: 'product', icon: 'inventory_2', color: 'text-emerald-500', bg: 'hover:bg-primary/10', label: 'Sản phẩm', sub: 'Tạo sản phẩm mới' },
                     { key: 'attributes', icon: 'tune', color: 'text-cyan-500', bg: 'hover:bg-cyan-500/10', label: 'Biến thể', sub: 'Tạo biến thể sản phẩm' },
@@ -244,18 +266,18 @@ const ProductListScreen: React.FC = () => {
           </section>
 
           {/* Tabs */}
-          <div className="flex px-6 pt-4 border-b border-gray-200 dark:border-white/5 bg-gray-50/30 dark:bg-accent-dark/10">
+          <div className="px-6 flex gap-8 border-b border-white/5">
             {(['products', 'attributes'] as const).map((tab) => (
               <button key={tab}
                 onClick={() => { setActiveTab(tab); setSelectedProduct(null); setSelectedAttribute(null); }}
-                className={`px-8 py-3 text-sm font-bold uppercase tracking-widest flex items-center gap-3 rounded-tl-2xl rounded-tr-2xl transition-all border-none cursor-pointer ${tab === 'attributes' ? '-ml-2' : ''} ${activeTab === tab
-                  ? 'bg-white dark:bg-surface-dark text-gray-800 dark:text-gray-200 shadow-[0_-4px_20px_0_rgba(0,0,0,0.03)] border border-b-0 border-gray-200 dark:border-white/10 z-10 scale-105 origin-bottom'
-                  : 'bg-transparent text-gray-500 hover:bg-gray-200/50 dark:hover:bg-white/5'}`}
+                className={`flex items-center gap-2 py-4 text-sm tracking-wide transition-all border-none bg-transparent cursor-pointer ${activeTab === tab
+                  ? 'border-b-2 border-primary text-white font-bold'
+                  : 'border-b-2 border-transparent text-gray-500 font-bold hover:text-gray-300'}`}
               >
-                {tab === 'products' ? 'Sản phẩm' : 'Biến thể'}
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${activeTab === tab
-                  ? tab === 'products' ? 'bg-primary text-black' : 'bg-cyan-500 text-white'
-                  : 'bg-gray-200 text-gray-500 dark:bg-white/10'}`}>
+                {tab === 'products' ? 'SẢN PHẨM' : 'BIẾN THỂ'}
+                <span className={`px-2 py-0.5 rounded-full text-xs font-black ${activeTab === tab
+                  ? 'bg-primary text-black'
+                  : 'bg-white/10 text-gray-400'}`}>
                   {tab === 'products' ? totalElements : attrTotalElements}
                 </span>
               </button>
@@ -263,13 +285,13 @@ const ProductListScreen: React.FC = () => {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto bg-white/60 dark:bg-surface-dark/60 rounded-b-4xl">
+          <div className="overflow-x-auto min-h-[300px]">
             {activeTab === 'products' ? (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50/50 dark:bg-accent-dark/30">
+                  <tr className="border-b border-white/5">
                     {['Trạng thái', 'Tên sản phẩm', 'Mã SKU', 'Hình ảnh', 'Cập nhật', 'Tác vụ'].map((h) => (
-                      <th key={h} className="py-2 px-3 text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                      <th key={h} className="px-6 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -299,9 +321,9 @@ const ProductListScreen: React.FC = () => {
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50/50 dark:bg-accent-dark/30">
+                  <tr className="border-b border-white/5">
                     {['Trạng thái', 'Tên biến thể', 'Mã SKU', 'Giá bán', 'Tồn kho', 'Sản phẩm gốc', 'Tùy chọn'].map((h) => (
-                      <th key={h} className="py-2 px-3 text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                      <th key={h} className="px-6 py-5 text-[11px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -325,35 +347,26 @@ const ProductListScreen: React.FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="p-6 bg-white/30 dark:bg-accent-dark/20 flex flex-col sm:flex-row justify-between items-center text-sm border-t border-gray-200 dark:border-white/5 gap-4">
-            <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400 font-medium">
-              <span className="material-icons-round text-sm opacity-50">analytics</span>
-              Hiển thị
-              <span className="text-gray-900 dark:text-white font-bold px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 rounded-md text-xs">{fromItem}</span>
-              đến
-              <span className="text-gray-900 dark:text-white font-bold px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 rounded-md text-xs">{toItem}</span>
-              trong số
-              <span className="text-primary font-black px-1.5 py-0.5 bg-primary/10 rounded-md text-xs">{curTotalElements.toLocaleString('vi-VN')}</span>
-              mục
+          <div className="p-4 md:px-6 md:py-4 bg-[#12131A] flex flex-col sm:flex-row justify-between items-center text-sm border-t border-white/5 gap-4">
+            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+              Hiển thị <span className="text-white">{fromItem}</span> đến <span className="text-white">{toItem}</span> trong số <span className="text-white">{curTotalElements.toLocaleString('vi-VN')}</span> mục
             </div>
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-1 pl-3 pr-4 py-2 text-xs font-bold rounded-xl transition-all disabled:opacity-20 hover:bg-gray-100 dark:hover:bg-white/5 text-stone-600 dark:text-stone-300 bg-transparent border-none cursor-pointer"
+            <div className="flex items-center gap-1">
+              <button className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:bg-white/5 transition-colors bg-transparent border-none cursor-pointer disabled:opacity-30"
                 onClick={() => changePage(curPage - 1)} disabled={curPage === 1 || (activeTab === 'products' ? isLoading : attrLoading)}>
-                <span className="material-icons-round text-lg">chevron_left</span>Trước
+                <span className="material-icons-round text-sm">chevron_left</span>
               </button>
-              <div className="flex gap-1.5 items-center">
-                {pageButtons.map((pg, idx) =>
-                  pg === '…' ? <span key={`ell-${idx}`} className="px-1 text-stone-400 font-black">···</span> : (
-                    <button key={`pg-${pg}`}
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border-none font-bold text-xs cursor-pointer shadow-sm ${pg === curCurrentPage ? 'bg-primary text-black shadow-glow-sm scale-110' : 'hover:bg-gray-100 dark:hover:bg-white/10 bg-white/40 dark:bg-white/5 text-stone-500 dark:text-stone-400'}`}
-                      onClick={() => changePage(pg as number)}>{pg}
-                    </button>
-                  )
-                )}
-              </div>
-              <button className="flex items-center gap-1 pl-4 pr-3 py-2 text-xs font-bold rounded-xl transition-all disabled:opacity-20 hover:bg-gray-100 dark:hover:bg-white/5 text-stone-600 dark:text-stone-300 bg-transparent border-none cursor-pointer"
+              {pageButtons.map((pg, idx) =>
+                pg === '…' ? <span key={`ell-${idx}`} className="px-1 text-stone-400 font-black">···</span> : (
+                  <button key={`pg-${pg}`}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold border-none cursor-pointer transition-colors ${pg === curCurrentPage ? 'bg-primary text-black' : 'bg-transparent text-gray-500 hover:bg-white/5'}`}
+                    onClick={() => changePage(pg as number)}>{pg}
+                  </button>
+                )
+              )}
+              <button className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:bg-white/5 transition-colors bg-transparent border-none cursor-pointer disabled:opacity-30"
                 onClick={() => changePage(curPage + 1)} disabled={curPage === curTotalPages || (activeTab === 'products' ? isLoading : attrLoading)}>
-                Tiếp<span className="material-icons-round text-lg">chevron_right</span>
+                <span className="material-icons-round text-sm">chevron_right</span>
               </button>
             </div>
           </div>
@@ -370,9 +383,7 @@ const ProductListScreen: React.FC = () => {
             <AttributeDetailPanel attr={selectedAttribute} onClose={() => setSelectedAttribute(null)}
               onSave={async (updated) => {
                 setSelectedAttribute(updated);
-                const fresh = await fetchAttributes(attrBody);
-                const freshAttr = fresh?.data?.contents?.find(a => a.id === updated.id);
-                if (freshAttr) setSelectedAttribute(freshAttr);
+                refetchAttr();
               }} />
           </ErrorBoundary>
         )}

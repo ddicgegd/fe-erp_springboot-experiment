@@ -85,6 +85,7 @@ export interface AttributesSearchRequest {
 export interface CategoryDto {
   id?: string;
   name?: string;
+  skuInfo?: SkuInfoDto;
 }
 
 export interface PagingResponseCategoryDto {
@@ -110,8 +111,7 @@ export interface UpdateAttributesPayload {
 
 export interface CreateProductPayload {
   name: string;
-  category_id: string;
-  sku?: string;
+  category_sku: string;
   status: string;
 }
 
@@ -119,18 +119,40 @@ export interface CreateCategoryPayload {
   name: string;
 }
 
-export interface VariantGroupInput {
+export interface VariantOptionInput {
   key: string;
-  values: string[];
+  value: string;
+  target?: string | null;
 }
 
-export interface CreateAttributesPayload {
-  id: string;
-  name: string;
+export interface PromotionInput {
+  key: string;
+  data: string;
+}
+
+export interface SpecificationItemInput {
+  key: string;
+  data: string;
+}
+
+export interface SpecificationGroupInput {
+  title: string;
+  items: SpecificationItemInput[];
+}
+
+export interface AttributeInput {
   price: number;
   salePrice?: number;
   stockQuantity: number;
   statusProduct: string;
-  productId: string;
-  variantGroups: VariantGroupInput[];
+  variantOptions: VariantOptionInput[];
+  specifications?: SpecificationGroupInput[];
+  promotions?: PromotionInput[];
+}
+
+export interface CreateAttributesPayload {
+  name: string;
+  product_sku: string;
+  keywords?: string[];
+  attributes: AttributeInput[];
 }

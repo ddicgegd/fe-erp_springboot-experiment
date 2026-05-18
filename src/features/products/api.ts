@@ -1,4 +1,5 @@
 import { customInstance } from '../../api/axios-instance';
+import Axios from 'axios';
 import type {
   GetProductRequest,
   PageProductDto,
@@ -9,6 +10,14 @@ import type {
   CreateProductPayload,
   CreateAttributesPayload,
 } from './types';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const axiosApi = Axios.create({ baseURL: API_BASE, headers: { 'Content-Type': 'application/json' } });
+axiosApi.interceptors.request.use((cfg) => {
+  const token = localStorage.getItem('access_token');
+  if (token && cfg.headers) cfg.headers.Authorization = `Bearer ${token}`;
+  return cfg;
+});
 
 // ─── Read ──────────────────────────────────────────────────────────────────────
 
@@ -37,12 +46,11 @@ export const fetchCategories = (): Promise<ResponsePagingResponseCategoryDto> =>
 
 // ─── Mutations ─────────────────────────────────────────────────────────────────
 
+export const updateProduct = (payload: { id: string; name?: string; status?: string; sku?: string }): Promise<unknown> =>
+  axiosApi.put('/api/merchandise/update-Product', payload).then(r => r.data);
+
 export const updateAttributes = (payload: UpdateAttributesPayload): Promise<unknown> =>
-  customInstance('/api/merchandise/update-Attributes', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  axiosApi.put('/api/merchandise/update-Attributes', payload).then(r => r.data);
 
 export const createProduct = (payload: CreateProductPayload): Promise<unknown> =>
   customInstance('/api/merchandise/add-Product', {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Eye, ChevronRight, Image as ImageIcon } from 'lucide-react';
 import type { ProductDto } from '../types';
 import { getStatusInfo, getStatusDetailInfo, hashName, getImageUrl } from '../helpers';
 import { ICON_LIST, ICON_COLOR } from '../constants';
@@ -17,27 +18,50 @@ const ProductRow: React.FC<ProductRowProps> = ({ product, isSelected, onSelect }
   void iconIdx;
   void colorIdx;
 
+  const statusBadge = () => {
+    switch (product.status) {
+      case 'ACTIVE':
+        return (
+          <div className="flex items-center gap-2 bg-[#A3E635]/10 w-fit px-3 py-1.5 rounded-full border border-[#A3E635]/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#A3E635] shadow-[0_0_8px_#A3E635]"></div>
+            <span className="text-xs font-bold text-[#A3E635]">{statusInfo.label}</span>
+          </div>
+        );
+      case 'LOCKED':
+        return (
+          <div className="flex items-center gap-2 bg-amber-500/10 w-fit px-3 py-1.5 rounded-full border border-amber-500/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#F59E0B]"></div>
+            <span className="text-xs font-bold text-amber-500">{statusInfo.label}</span>
+          </div>
+        );
+      default:
+        return (
+          <div className="flex items-center gap-2 bg-gray-500/10 w-fit px-3 py-1.5 rounded-full border border-gray-500/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+            <span className="text-xs font-bold text-gray-400">{statusInfo.label}</span>
+          </div>
+        );
+    }
+  };
+
   return (
     <tr
-      className={`group cursor-pointer transition-all duration-300 border-t border-gray-100 dark:border-white/5 ${
+      className={`group cursor-pointer transition-all duration-300 border-t border-white/5 ${
         isSelected
-          ? 'bg-primary/10 dark:bg-primary/20 shadow-[inset_4px_0_0_0_#98FF98] dark:shadow-[inset_4px_0_0_0_#4ade80]'
-          : 'hover:bg-white/40 dark:hover:bg-white/5'
+          ? 'bg-primary/5 shadow-[inset_4px_0_0_0_#A3E635]'
+          : 'hover:bg-white/[0.02]'
       }`}
       onClick={onSelect}
     >
       {/* Trạng thái */}
-      <td className="py-2 px-3">
-        <div className={`px-3 py-1.5 ${statusInfo.bgClass} rounded-xl inline-flex items-center gap-2`}>
-          <span className={`w-2 h-2 rounded-full ${getStatusInfo(product.status).dotClass}`} />
-          <span className={`${statusInfo.textClass} text-xs font-bold`}>{statusInfo.label}</span>
-        </div>
+      <td className="px-6 py-4">
+        {statusBadge()}
       </td>
 
       {/* Tên sản phẩm */}
-      <td className="py-2 px-3">
+      <td className="px-6 py-4">
         <span
-          className="font-bold text-base text-gray-800 dark:text-white truncate max-w-[200px] block"
+          className="font-bold text-white text-sm truncate max-w-[200px] block"
           title={product.name}
         >
           {product.name}
@@ -45,12 +69,12 @@ const ProductRow: React.FC<ProductRowProps> = ({ product, isSelected, onSelect }
       </td>
 
       {/* Mã SKU */}
-      <td className="py-2 px-3 font-mono font-medium text-gray-500 dark:text-gray-400 text-sm">
-        {product.skuInfo?.sku || <span className="italic text-stone-400">N/A</span>}
+      <td className="px-6 py-4 font-mono text-gray-500 text-sm">
+        {product.skuInfo?.sku || <span className="italic text-stone-600">N/A</span>}
       </td>
 
       {/* Hình ảnh */}
-      <td className="py-2 px-3">
+      <td className="px-6 py-4">
         {product.mediaItems && product.mediaItems.length > 0 ? (
           <div className="flex space-x-2">
             {product.mediaItems.slice(0, 2).map((img, i) => (
@@ -58,40 +82,40 @@ const ProductRow: React.FC<ProductRowProps> = ({ product, isSelected, onSelect }
                 key={i}
                 src={getImageUrl(img.url)}
                 alt=""
-                className="w-8 h-8 rounded-lg object-cover bg-white shadow-sm border border-gray-200 dark:border-white/10"
+                className="w-10 h-10 rounded-lg object-cover bg-[#0A0B10] border border-white/5"
               />
             ))}
             {product.mediaItems.length > 2 && (
-              <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-gray-500">
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-[10px] font-bold text-gray-400 border border-white/5">
                 +{product.mediaItems.length - 2}
               </div>
             )}
           </div>
         ) : (
-          <span className="text-xs text-stone-400 italic">—</span>
+          <div className="w-10 h-10 rounded-lg bg-[#0A0B10] border border-white/5 flex items-center justify-center overflow-hidden">
+            <ImageIcon size={16} className="text-gray-600" />
+          </div>
         )}
       </td>
 
       {/* Cập nhật */}
-      <td className="py-2 px-3 font-mono font-medium text-gray-500 dark:text-gray-400 text-sm">
+      <td className="px-6 py-4 font-mono text-gray-400 text-sm">
         {new Date().toLocaleDateString('vi-VN')}
       </td>
 
       {/* Tác vụ */}
-      <td className="py-2 px-3 text-center" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-center space-x-1">
+      <td className="px-6 py-4 text-center" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-end space-x-1">
           <button
-            className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all shadow-sm ${
+            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all border-none cursor-pointer bg-transparent ${
               isSelected
                 ? 'bg-primary text-black'
-                : 'text-gray-400 hover:bg-white hover:text-primary dark:hover:bg-white/10'
+                : 'text-gray-500 hover:text-white hover:bg-white/10'
             }`}
             onClick={onSelect}
             title="Xem chi tiết"
           >
-            <span className="material-icons-round text-[18px]">
-              {isSelected ? 'keyboard_arrow_right' : 'visibility'}
-            </span>
+            {isSelected ? <ChevronRight size={20} /> : <Eye size={20} />}
           </button>
         </div>
       </td>

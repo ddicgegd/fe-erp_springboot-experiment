@@ -74,212 +74,163 @@ const AttributeDetailPanel: React.FC<AttributeDetailPanelProps> = ({
   };
 
   const inputClass =
-    'w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-sm py-2.5 px-3 focus:ring-2 focus:ring-cyan-500 outline-none text-gray-800 dark:text-gray-200 transition-all';
+    'w-full bg-[#0A0B10]/80 border border-white/5 rounded-lg text-[13px] py-2 px-3 focus:ring-1 focus:ring-primary focus:border-primary outline-none text-white transition-all';
 
   return (
-    <div className="w-[350px] flex-shrink-0 sticky top-6 bg-white/50 dark:bg-surface-dark/50 backdrop-blur-xl rounded-4xl border border-gray-200 dark:border-white/5 overflow-hidden animate-in slide-in-from-right-4 duration-300">
-      {/* Header */}
-      <div className="p-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 dark:from-cyan-500/20 dark:to-blue-500/10 border-b border-gray-200 dark:border-white/5">
-        <div className="flex justify-between items-start">
-          <div className="flex-1 min-w-0">
-            <div className={`inline-flex items-center gap-2 px-3 py-1 ${statusInfo.bgClass} rounded-full mb-3`}>
-              <span className={`w-2 h-2 rounded-full ${statusInfo.dotClass}`} />
-              <span className={`text-xs font-bold ${statusInfo.textClass}`}>{statusInfo.label}</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="w-full max-w-[400px] bg-[#12131A] rounded-2xl border border-white/5 flex flex-col shadow-2xl relative animate-in zoom-in-95 duration-200 overflow-hidden" style={{ maxHeight: '85vh' }}>
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-white/5 relative bg-[#0A0B10]/50 flex items-start justify-between">
+          <div className="flex flex-col gap-1 pr-4">
+            <div className={`w-fit inline-flex items-center px-2.5 py-0.5 bg-white/5 border border-white/10 rounded mb-0.5`}>
+              <span className={`${statusInfo.textClass} text-[10px] font-bold`}>{statusInfo.label}</span>
             </div>
-            <h3
-              className="text-lg font-black text-gray-800 dark:text-white truncate"
-              title={attr.name}
-            >
+            <h3 className="text-lg font-bold text-white truncate max-w-[260px]" title={attr.name}>
               {attr.name || 'Chưa đặt tên'}
             </h3>
-            <p className="text-xs text-stone-400 font-mono mt-1">SKU: {attr.sku?.sku || 'N/A'}</p>
+            <p className="text-[11px] text-gray-500 font-mono tracking-wider">SKU: {attr.sku?.sku || 'N/A'}</p>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition text-stone-400 border-none cursor-pointer bg-transparent"
+            className="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors border-none cursor-pointer shrink-0 mt-1"
+            title="Đóng"
           >
-            <span className="material-icons-round text-[20px]">close</span>
+            <span className="material-icons-round text-[16px]">close</span>
           </button>
         </div>
-      </div>
 
-      {/* Body */}
-      <div className="p-6 space-y-5 max-h-[500px] overflow-y-auto">
-        {/* Parent product */}
-        {attr.product?.name && (
-          <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-            <span className="material-icons-round text-stone-400 text-[16px]">inventory_2</span>
-            <div>
-              <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider">
-                Sản phẩm gốc
-              </p>
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {attr.product.name}
-              </p>
+        {/* Body */}
+        <div className="p-5 space-y-5 overflow-y-auto flex-1">
+          {/* Parent product */}
+          {attr.product?.name && (
+            <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl">
+              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                <span className="material-icons-round text-gray-400 text-[18px]">inventory_2</span>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Sản phẩm gốc</p>
+                <p className="text-sm font-semibold text-white">{attr.product.name}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Variant Options */}
-        {attr.variantOptions && attr.variantOptions.length > 0 && (
-          <div>
-            <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider mb-2">
-              Tùy chọn biến thể
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {attr.variantOptions.map((opt, i) => (
-                <div key={i} className="px-3 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-xs font-bold">
-                  <span className="text-stone-400 font-normal mr-1">{opt.key}:</span>
-                  {opt.value}
+          {/* Variant Options */}
+          {attr.variantOptions && attr.variantOptions.length > 0 && (
+            <div>
+              <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider mb-2">Tùy chọn biến thể</p>
+              <div className="flex flex-wrap gap-2">
+                {attr.variantOptions.map((opt, i) => (
+                  <div key={i} className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-white text-xs font-bold">
+                    <span className="text-gray-500 font-normal mr-1">{opt.key}:</span>
+                    {opt.value}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {editing ? (
+            /* Edit Form */
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-[2fr_1fr] gap-3">
+                <div>
+                  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Tên</label>
+                  <input className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {editing ? (
-          /* Edit Form */
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] text-stone-400 uppercase font-bold tracking-wider block mb-1">
-                Tên
-              </label>
-              <input
-                className={inputClass}
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-[10px] text-stone-400 uppercase font-bold tracking-wider block mb-1">
-                  Giá gốc (₫)
-                </label>
-                <input
-                  className={inputClass}
-                  type="number"
-                  value={form.price}
-                  onChange={(e) => setForm({ ...form, price: +e.target.value })}
-                />
+                <div>
+                  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Trạng thái</label>
+                  <div className="[&_.select-container]:min-h-[35px] [&_.select-container]:bg-[#0A0B10]/80 [&_.select-container]:border-white/5 [&_.select-container]:rounded-lg [&_.select-value]:text-[13px] [&_.select-value]:py-1.5 [&_.select-value]:px-3">
+                    <SearchableSelect
+                      label=""
+                      placeholder="Trạng thái..."
+                      value={form.statusProduct}
+                      onChange={(v) => setForm({ ...form, statusProduct: v })}
+                      showSearch={false}
+                      options={[
+                        { value: 'AVAILABLE', label: 'Có sẵn' },
+                        { value: 'UNAVAILABLE', label: 'Hết hàng' },
+                        { value: 'COMING_SOON', label: 'Sắp ra mắt' },
+                        { value: 'NOT_ACTIVE', label: 'Ngừng bán' },
+                      ]}
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="text-[10px] text-stone-400 uppercase font-bold tracking-wider block mb-1">
-                  Giá sale (₫)
-                </label>
-                <input
-                  className={inputClass}
-                  type="number"
-                  value={form.sale_price}
-                  onChange={(e) => setForm({ ...form, sale_price: +e.target.value })}
-                />
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Giá gốc (₫)</label>
+                  <div className="relative">
+                    <input className={`${inputClass} pr-8`} type="text" value={form.price ? form.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''} onChange={(e) => setForm({ ...form, price: parseInt(e.target.value.replace(/\D/g, '') || '0', 10) })} />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none font-medium text-xs">₫</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Giá sale (₫)</label>
+                  <div className="relative">
+                    <input className={`${inputClass} pr-8`} type="text" value={form.sale_price ? form.sale_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''} onChange={(e) => setForm({ ...form, sale_price: parseInt(e.target.value.replace(/\D/g, '') || '0', 10) })} />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none font-medium text-xs">₫</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Tồn kho</label>
+                  <input className={inputClass} type="text" value={form.stock_quantity ? form.stock_quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''} onChange={(e) => setForm({ ...form, stock_quantity: parseInt(e.target.value.replace(/\D/g, '') || '0', 10) })} />
+                </div>
               </div>
             </div>
-
-            <div>
-              <label className="text-[10px] text-stone-400 uppercase font-bold tracking-wider block mb-1">
-                Tồn kho
-              </label>
-              <input
-                className={inputClass}
-                type="number"
-                value={form.stock_quantity}
-                onChange={(e) => setForm({ ...form, stock_quantity: +e.target.value })}
-              />
-            </div>
-
-            <div>
-              <label className="text-[10px] text-stone-400 uppercase font-bold tracking-wider block mb-1">
-                Trạng thái
-              </label>
-              <SearchableSelect
-                label=""
-                placeholder="Chọn trạng thái..."
-                value={form.statusProduct}
-                onChange={(v) => setForm({ ...form, statusProduct: v })}
-                showSearch={false}
-                options={[
-                  { value: 'AVAILABLE', label: 'Có sẵn' },
-                  { value: 'UNAVAILABLE', label: 'Hết hàng' },
-                  { value: 'COMING_SOON', label: 'Sắp ra mắt' },
-                  { value: 'NOT_ACTIVE', label: 'Không hoạt động' },
-                ]}
-              />
-            </div>
-          </div>
-        ) : (
-          /* View Fields */
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider">
-                  Giá gốc
-                </p>
-                <p className="text-lg font-black text-gray-800 dark:text-white mt-0.5">
-                  {(attr.price ?? 0).toLocaleString('vi-VN')}₫
-                </p>
+          ) : (
+            /* View Fields */
+            <div className="grid grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden">
+              <div className="bg-[#12131A] p-3 flex flex-col justify-center">
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Giá gốc</p>
+                <p className="text-sm font-black text-white mt-1">{(attr.price ?? 0).toLocaleString('vi-VN')}₫</p>
               </div>
-              <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider">
-                  Giá sale
-                </p>
-                <p className="text-lg font-black text-primary mt-0.5">
-                  {attr.salePrice != null ? `${attr.salePrice.toLocaleString('vi-VN')}₫` : '—'}
-                </p>
+              <div className="bg-[#12131A] p-3 flex flex-col justify-center">
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Giá sale</p>
+                <p className="text-sm font-black text-[#A3E635] mt-1">{attr.salePrice != null && attr.salePrice > 0 ? `${attr.salePrice.toLocaleString('vi-VN')}₫` : '—'}</p>
+              </div>
+              <div className="bg-[#12131A] p-3 col-span-2 flex justify-between items-center">
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Tồn kho</p>
+                <div className="flex items-baseline gap-1">
+                  <span className={`text-sm font-black ${(attr.stockQuantity ?? 0) === 0 ? 'text-red-500' : 'text-white'}`}>
+                    {attr.stockQuantity?.toLocaleString('vi-VN') ?? '0'}
+                  </span>
+                  <span className="text-[10px] text-gray-500 font-bold">ĐƠN VỊ</span>
+                </div>
               </div>
             </div>
+          )}
+        </div>
 
-            <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-              <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider">
-                Tồn kho
-              </p>
-              <div className="flex items-center gap-3 mt-1">
-                <span
-                  className={`text-2xl font-black ${
-                    (attr.stockQuantity ?? 0) === 0
-                      ? 'text-red-500'
-                      : (attr.stockQuantity ?? 0) < 10
-                      ? 'text-orange-500'
-                      : 'text-gray-800 dark:text-white'
-                  }`}
-                >
-                  {attr.stockQuantity?.toLocaleString('vi-VN') ?? '0'}
-                </span>
-                <span className="text-xs text-stone-400">đơn vị</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="p-6 border-t border-gray-200 dark:border-white/5 flex gap-3">
-        {editing ? (
-          <>
+        {/* Action */}
+        <div className="p-4 border-t border-white/5 bg-[#0A0B10] flex gap-3">
+          {editing ? (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex-1 h-11 rounded-xl text-[11px] font-bold bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors border-none cursor-pointer"
+              >
+                HỦY BỎ
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex-[2] h-11 rounded-xl text-[11px] font-bold bg-primary text-black hover:bg-[#86efac] active:scale-95 transition-all border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {saving && <LoadingSpinner size={14} color="black" />}
+                {saving ? 'ĐANG LƯU...' : 'LƯU THAY ĐỔI'}
+              </button>
+            </>
+          ) : (
             <button
-              onClick={handleCancel}
-              className="flex-1 py-3 rounded-2xl text-sm font-bold bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition border-none cursor-pointer"
+              onClick={() => setEditing(true)}
+              className="w-full h-11 rounded-xl text-xs font-bold bg-primary text-black hover:bg-[#86efac] transition-colors border-none cursor-pointer flex items-center justify-center gap-2"
             >
-              Hủy bỏ
+              <span className="material-icons-round text-[16px]">edit</span>
+              CHỈNH SỬA
             </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex-1 py-3 rounded-2xl text-sm font-bold bg-cyan-500 text-white hover:bg-cyan-600 active:scale-95 transition-all border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {saving && <LoadingSpinner size={14} color="white" />}
-              {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => setEditing(true)}
-            className="w-full py-3 rounded-2xl text-sm font-bold bg-cyan-500 text-white hover:bg-cyan-600 active:scale-95 transition-all border-none cursor-pointer flex items-center justify-center gap-2"
-          >
-            <span className="material-icons-round text-[18px]">edit</span>
-            CHỈNH SỬA
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

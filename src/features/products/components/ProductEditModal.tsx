@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ProductDto, MediaItemDto } from '../types';
 import { getImageUrl } from '../helpers';
+import { updateProduct } from '../api';
 import LoadingSpinner from './LoadingSpinner';
 import SearchableSelect from './SearchableSelect';
 
@@ -103,8 +104,16 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({ product, onClose, o
           body: formData,
         });
       }
+
+      // 3. Update product details (Name, Status)
+      await updateProduct({
+        id: product.id,
+        name: formName,
+        status: formStatus,
+      });
+      
     } catch (err) {
-      console.error('Save media failed:', err);
+      console.error('Save failed:', err);
     }
 
     onSave({ ...product, name: formName, skuInfo: { sku: formSku }, status: formStatus, mediaItems });
@@ -218,9 +227,8 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({ product, onClose, o
                   <input
                     type="text"
                     value={formSku}
-                    onChange={(e) => setFormSku(e.target.value)}
-                    className="w-full h-10 px-3.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-accent-dark/50 text-gray-900 dark:text-white text-sm outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-stone-400"
-                    placeholder="VD: SKU-001-XL"
+                    readOnly
+                    className="w-full h-10 px-3.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white text-sm outline-none cursor-not-allowed"
                   />
                 </div>
 
@@ -238,7 +246,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({ product, onClose, o
                         <option
                           key={s.value}
                           value={s.value}
-                          className="bg-white dark:bg-[#1C1C1E] text-gray-900 dark:text-white"
+                          className="bg-white dark:bg-[#0A0B10] text-gray-900 dark:text-white"
                         >
                           {s.label}
                         </option>
@@ -283,19 +291,6 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({ product, onClose, o
               {/* Right column — Metadata */}
               <div className="w-[200px] flex flex-col gap-5 flex-shrink-0">
                 <div className="flex items-start gap-2">
-                  <span className="material-icons-round text-stone-400 text-[16px] mt-0.5">fingerprint</span>
-                  <div className="flex flex-col">
-                    <span className="text-gray-900 dark:text-white text-xs font-semibold">Mã sản phẩm</span>
-                    <span className="text-gray-500 dark:text-stone-400 text-[10px] font-light">Không thể thay đổi</span>
-                  </div>
-                </div>
-                <div className="px-3.5 py-2.5 bg-gray-100/50 dark:bg-accent-dark/50 rounded-xl border border-gray-200/50 dark:border-white/5">
-                  <span className="text-gray-600 dark:text-stone-300 text-xs font-mono break-all">
-                    {product.id || 'N/A'}
-                  </span>
-                </div>
-
-                <div className="flex items-start gap-2 mt-2">
                   <span className="material-icons-round text-stone-400 text-[16px] mt-0.5">image</span>
                   <div className="flex flex-col">
                     <span className="text-gray-900 dark:text-white text-xs font-semibold">Ảnh đại diện</span>
